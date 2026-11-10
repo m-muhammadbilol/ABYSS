@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABYSS — Journey Into the Unknown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#020B12;--navy:#061827;--ocean:#0B3550;--teal:#0E6470;--cyan:#6FE7E1;--ice:#EAF7F7;--mute:#91AAB7;--coral:#FF8068;--bg:#1a7fb0;color-scheme:dark;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--ice);font:400 1rem/1.65 Inter,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3{font-family:"Space Grotesk",system-ui,sans-serif;line-height:1.05;letter-spacing:-.02em}
+.serif{font-family:"DM Serif Display",Georgia,serif;font-weight:400}
+.mono{font:500 .72rem/1.4 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+section{position:relative}
+.btn{display:inline-block;font:700 .8rem "Space Grotesk",sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:15px 26px;border-radius:999px;border:1px solid var(--cyan);background:var(--cyan);color:var(--black);cursor:pointer;text-decoration:none;transition:transform .3s,background .3s,color .3s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--cyan)}
+.btn.ghost:hover{background:rgba(111,231,225,.12)}
+/* header */
+header{position:fixed;inset:0 0 auto;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:background .5s,backdrop-filter .5s}
+header.solid{background:rgba(2,11,18,.82);backdrop-filter:blur(12px)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font:700 1.15rem "Space Grotesk";letter-spacing:.22em;text-decoration:none}
+.logo svg{width:26px;height:26px}
+nav ul{display:flex;gap:30px;list-style:none;padding:0}
+nav a{font:500 .72rem "IBM Plex Mono";letter-spacing:.14em;text-decoration:none;color:var(--ice);opacity:.75;padding:8px 0;border-bottom:1px solid transparent;transition:.3s}
+nav a:hover,nav a.on{opacity:1;border-color:var(--cyan);color:var(--cyan)}
+.menu{display:none;background:none;border:1px solid rgba(234,247,247,.35);color:var(--ice);width:44px;height:44px;border-radius:50%;cursor:pointer}
+.bar .btn{padding:11px 18px}
+@media(max-width:860px){.menu{display:block}.bar .btn{display:none}
+nav{position:fixed;inset:0;background:var(--black);display:grid;place-items:center;opacity:0;visibility:hidden;transition:.4s}
+nav.open{opacity:1;visibility:visible}nav ul{flex-direction:column;align-items:center;gap:26px}nav a{font-size:1.1rem}
+.menu{position:relative;z-index:60}}
+/* hero */
+.hero{min-height:100svh;display:grid;align-items:center;overflow:hidden;background:linear-gradient(180deg,#3aa8d8 0%,#0B3550 60%,#061827 100%)}
+.rays{position:absolute;inset:-10% -10% 20%;background:repeating-conic-gradient(from 195deg at 50% -10%,rgba(255,255,255,.22) 0 2.5deg,transparent 2.5deg 9deg);mask:linear-gradient(#000,transparent 75%);-webkit-mask:linear-gradient(#000,transparent 75%);animation:sway 14s ease-in-out infinite alternate}
+@keyframes sway{to{transform:rotate(3deg) scale(1.06)}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,11,18,.7),rgba(2,11,18,.15) 70%),linear-gradient(0deg,var(--navy),transparent 40%)}
+.hero svg.waves{position:absolute;bottom:14%;left:0;width:200%;opacity:.25;animation:drift 24s linear infinite}
+@keyframes drift{to{transform:translateX(-50%)}}
+.dust i{position:absolute;width:3px;height:3px;border-radius:50%;background:#cdefff;opacity:.5;animation:rise linear infinite}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(-110vh)}}
+.hero .wrap{position:relative;z-index:2;padding-top:110px;padding-bottom:90px}
+.hero h1{font-size:clamp(2.6rem,9vw,7rem);max-width:12ch;margin:18px 0 22px;animation:in 1.2s both}
+.hero p.lead{max-width:46ch;color:#cfe6ee;font-size:1.1rem}
+.cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.status{position:absolute;z-index:2;right:22px;bottom:34px;text-align:right;color:var(--mute)}
+.status b{color:var(--cyan);font-weight:500}
+.scroll{position:absolute;z-index:2;left:22px;bottom:30px;display:flex;gap:10px;align-items:center;color:var(--mute)}
+.scroll span{width:1px;height:38px;background:linear-gradient(var(--cyan),transparent);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+@keyframes in{from{opacity:0;transform:translateY(24px)}}
+/* depth indicator */
+#gauge{position:fixed;z-index:40;right:18px;top:50%;transform:translateY(-50%);height:min(56vh,420px);display:flex;gap:10px;font:500 .62rem "IBM Plex Mono";letter-spacing:.1em;color:var(--mute);opacity:0;transition:opacity .5s;pointer-events:none}
+#gauge.show{opacity:1}
+#gauge .track{position:relative;width:2px;background:rgba(234,247,247,.18);border-radius:2px}
+#gauge .fill{position:absolute;inset:0 0 auto;background:var(--cyan);height:0}
+#gauge .dot{position:absolute;left:-4px;width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan);top:0;transform:translateY(-5px)}
+#gauge ol{list-style:none;padding:0;position:relative;width:62px}
+#gauge li{position:absolute;white-space:nowrap;transform:translateY(-50%);transition:color .3s}
+#gauge li.on{color:var(--cyan)}
+#readout{position:fixed;z-index:40;left:50%;bottom:14px;transform:translateX(-50%);padding:7px 16px;border-radius:999px;background:rgba(2,11,18,.8);backdrop-filter:blur(8px);border:1px solid rgba(111,231,225,.3);opacity:0;transition:opacity .5s;pointer-events:none;white-space:nowrap}
+#readout.show{opacity:1}
+@media(max-width:1000px){#gauge{display:none}}
+@media(min-width:1001px){#readout{left:auto;right:92px;bottom:auto;top:84px;transform:none}}
+/* generic */
+.pad{padding:110px 0}
+h2{font-size:clamp(2rem,5vw,3.6rem)}
+.sub{color:var(--mute);max-width:52ch;margin-top:14px}
+.intro{min-height:70svh;display:grid;align-items:center;background:linear-gradient(var(--navy),transparent)}
+.intro h2{max-width:16ch}
+/* zones */
+.zone{min-height:92svh;display:grid;align-items:center;overflow:hidden}
+.zone .grid{display:grid;gap:44px;align-items:center}
+@media(min-width:860px){.zone .grid{grid-template-columns:1fr 1fr}.zone.flip .art{order:-1}.zone.center .grid{grid-template-columns:1fr}.zone.center{text-align:center}.zone.center .sub{margin-inline:auto}}
+.zone .num{font:700 clamp(4rem,12vw,9rem)/1 "Space Grotesk";color:transparent;-webkit-text-stroke:1px rgba(111,231,225,.35);margin-bottom:8px}
+.zone h2{margin:10px 0 18px;max-width:14ch}
+.zone.center h2{max-width:none}
+.art{border-radius:22px;overflow:hidden;aspect-ratio:4/3;border:1px solid rgba(234,247,247,.12);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.art svg{width:100%;height:100%;display:block}
+.zone.center .art{aspect-ratio:21/9;max-width:900px;margin:30px auto 0}
+.chip{display:inline-block;border:1px solid rgba(111,231,225,.35);padding:5px 12px;border-radius:999px;margin-bottom:6px}
+.seam{height:90px;margin-top:-1px;background:linear-gradient(transparent,rgba(2,11,18,.35))}
+/* explorer */
+.explorer{background:rgba(2,11,18,.25)}
+.panel{display:grid;gap:30px;margin-top:40px;align-items:center}
+@media(min-width:860px){.panel{grid-template-columns:1.1fr 1fr}}
+.bigdepth{font:700 clamp(3rem,10vw,6.5rem)/1 "Space Grotesk";color:var(--cyan)}
+.bigdepth small{font-size:1.4rem;color:var(--mute)}
+input[type=range]{width:100%;margin:22px 0;accent-color:var(--cyan);height:34px;cursor:pointer}
+.stage{aspect-ratio:4/3;border-radius:22px;overflow:hidden;border:1px solid rgba(234,247,247,.12);transition:background .6s}
+.stage svg{width:100%;height:100%}
+/* species */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0}
+.filters button{min-height:44px;padding:0 18px;border-radius:999px;background:transparent;border:1px solid rgba(234,247,247,.25);color:var(--ice);font:500 .72rem "IBM Plex Mono";letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:.3s}
+.filters button[aria-pressed=true]{background:var(--cyan);color:var(--black);border-color:var(--cyan)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.card{background:rgba(11,53,80,.45);border:1px solid rgba(234,247,247,.1);border-radius:18px;overflow:hidden;cursor:pointer;text-align:left;color:inherit;padding:0;transition:transform .4s,border-color .4s;font:inherit}
+.card:hover{transform:translateY(-6px);border-color:rgba(111,231,225,.5)}
+.card .art{border-radius:0;border:0;box-shadow:none;aspect-ratio:3/2}
+.card svg{transition:transform .7s}.card:hover svg{transform:scale(1.07)}
+.card div.t{padding:16px 18px 20px}
+.card h3{font-size:1.2rem;margin-bottom:4px}
+.card em{color:var(--mute);font-size:.85rem}
+dialog{margin:auto;width:min(680px,92vw);max-height:90svh;border:1px solid rgba(111,231,225,.35);border-radius:22px;background:var(--navy);color:var(--ice);padding:0;overflow:auto}
+dialog::backdrop{background:rgba(2,11,18,.8);backdrop-filter:blur(6px)}
+dialog[open]{animation:in .4s both}
+dialog .body{padding:26px}
+dialog h3{font-size:2rem;margin:8px 0 2px}
+.x{position:absolute;right:14px;top:14px;width:44px;height:44px;border-radius:50%;background:rgba(2,11,18,.75);border:1px solid rgba(234,247,247,.3);color:var(--ice);font-size:1.2rem;cursor:pointer;z-index:2}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;margin:12px 0}
+/* facts */
+.facts{display:grid;gap:18px;margin-top:40px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.fact{border-top:1px solid rgba(111,231,225,.4);padding:22px 4px}
+.fact .ic{width:54px;height:54px;margin-bottom:14px}
+.fact h3{font-size:1.35rem;margin-bottom:8px}
+.fact p{color:var(--mute)}
+/* forms */
+.box{background:rgba(2,11,18,.55);border:1px solid rgba(234,247,247,.12);border-radius:22px;padding:clamp(20px,4vw,40px);margin-top:36px}
+fieldset{border:0;padding:0;margin:0 0 26px;min-width:0}
+legend{margin-bottom:12px}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts label{position:relative}
+.opts input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.opts span{display:inline-flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid rgba(234,247,247,.25);border-radius:12px;transition:.3s;cursor:pointer}
+.opts input:checked+span{background:rgba(111,231,225,.16);border-color:var(--cyan);color:var(--cyan)}
+.opts input:focus-visible+span{outline:2px solid var(--cyan);outline-offset:3px}
+.err{color:var(--coral);margin-top:12px;min-height:1.5em}
+.result{display:grid;gap:26px;animation:in .6s both}
+@media(min-width:760px){.result{grid-template-columns:1fr 1fr;align-items:center}}
+.result dl{display:grid;grid-template-columns:auto 1fr;gap:8px 20px;margin:18px 0}
+.result dt{color:var(--mute)}
+.note{color:var(--mute);font-size:.85rem;margin-top:14px}
+/* quiz */
+.q h3{font-size:clamp(1.3rem,3vw,1.8rem);margin:10px 0 22px}
+.q .opts{flex-direction:column}
+.q .opts label,.q .opts span{width:100%}
+.q .opts input:disabled+span{cursor:default}
+.q .opts .good{border-color:#6FE7A8!important;background:rgba(111,231,168,.15)!important;color:#bff7d8!important}
+.q .opts .bad{border-color:var(--coral)!important;background:rgba(255,128,104,.12)!important;color:var(--coral)!important}
+.fb{margin:16px 0;min-height:3em}
+.prog{height:3px;background:rgba(234,247,247,.15);border-radius:3px;margin-bottom:18px}.prog i{display:block;height:100%;background:var(--cyan);transition:width .5s}
+/* final */
+.final{min-height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;background:radial-gradient(60% 50% at 50% 55%,rgba(14,100,112,.35),transparent),var(--black)}
+.final h2{font-size:clamp(2.4rem,8vw,6rem);max-width:14ch;margin:16px auto 22px}
+.final .sub{margin:0 auto 34px}
+.orb{position:absolute;border-radius:50%;background:radial-gradient(circle,var(--cyan),transparent 65%);opacity:.35;filter:blur(2px);animation:pulse 5s infinite}
+footer{background:var(--black);padding:56px 0 calc(40px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(234,247,247,.1)}
+footer .wrap{display:grid;gap:26px}
+@media(min-width:760px){footer .wrap{grid-template-columns:1.5fr 1fr 1.1fr 1fr}}
+footer ul{list-style:none;padding:0;display:grid;gap:8px}
+footer a{color:var(--mute);text-decoration:none}footer a:hover{color:var(--cyan)}
+footer small{color:var(--mute);display:block}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header id="top-h"><div class="wrap bar">
+<a class="logo" href="#hero" aria-label="ABYSS home"><svg viewBox="0 0 32 32" fill="none" stroke="#6FE7E1" stroke-width="1.6"><circle cx="16" cy="16" r="13"/><path d="M5 14c4-3 7 3 11 0s7 3 11 0M5 20c4-3 7 3 11 0s7 3 11 0" opacity=".7"/></svg>ABYSS</a>
+<nav id="nav" aria-label="Main"><ul>
+<li><a href="#descent" data-s="descent">Explore</a></li><li><a href="#zones" data-s="zones">Depth Zones</a></li><li><a href="#life" data-s="life">Marine Life</a></li><li><a href="#expedition" data-s="expedition">Expedition</a></li></ul></nav>
+<a class="btn" href="#depth">Dive in</a>
+<button class="menu" id="menu" aria-expanded="false" aria-controls="nav" aria-label="Open menu">☰</button>
+</div></header>
+
+<aside id="gauge" aria-hidden="true"><div class="track"><div class="fill"></div><div class="dot"></div></div><ol></ol></aside>
+<div id="readout" class="mono" aria-live="off">Surface · 0 m</div>
+
+<main>
+<section class="hero" id="hero">
+<div class="rays"></div>
+<svg class="waves" viewBox="0 0 1600 60" preserveAspectRatio="none" height="60"><path d="M0 30c100-30 200 30 300 0s200 30 300 0 200 30 300 0 200 30 300 0 200 30 300 0 200 30 300 0v30H0z" fill="#EAF7F7"/></svg>
+<div class="dust" aria-hidden="true"></div>
+<div class="wrap">
+<p class="mono">An interactive ocean exploration</p>
+<h1>The deep is closer than you think.</h1>
+<p class="lead">Descend into a world of extraordinary creatures, hidden ecosystems, and unexplored depths.</p>
+<div class="cta"><a class="btn" href="#descent">Start exploring</a><a class="btn ghost" href="#zones">Discover the depths</a></div>
+</div>
+<div class="scroll mono" aria-hidden="true"><span></span>Scroll</div>
+<div class="status mono">Expedition status<br><b>● Ready to descend</b></div>
+</section>
+
+<section class="intro" id="descent"><div class="wrap">
+<p class="mono">Expedition log · 00</p>
+<h2 class="serif">An expedition through the hidden world beneath the surface.</h2>
+<p class="sub">Keep scrolling. The light will fade, the pressure will build, and the depth gauge will follow you down. Depth boundaries here are approximate; scientists draw them in slightly different places.</p>
+</div></section>
+
+<div id="zones"></div>
+
+<section class="pad explorer" id="depth"><div class="wrap">
+<p class="mono">Interactive</p>
+<h2>Choose your depth.</h2>
+<p class="sub">How far beneath the surface would you go?</p>
+<div class="panel">
+<div>
+<div class="bigdepth"><span id="dv">0</span> <small>m</small></div>
+<p class="mono" id="dz" style="margin-top:8px">Sunlight Zone</p>
+<label for="slider" class="sub" style="display:block">Depth slider, 0 to 11,000 metres</label>
+<input id="slider" type="range" min="0" max="11000" step="50" value="0">
+<p id="dd"></p>
+</div>
+<div class="stage" id="stage" role="img" aria-label="Illustration of a creature typical of the selected depth"></div>
+</div></div></section>
+
+<section class="pad" id="life"><div class="wrap">
+<p class="mono">Species index</p>
+<h2>Meet the residents of the deep.</h2>
+<p class="sub">Discover the extraordinary creatures that call the ocean home.</p>
+<div class="filters" role="group" aria-label="Filter species"></div>
+<div class="cards" aria-live="polite"></div>
+</div></section>
+
+<dialog id="dlg" aria-labelledby="dt"><button class="x" aria-label="Close details">✕</button><div id="dbody"></div></dialog>
+
+<section class="pad"><div class="wrap">
+<p class="mono">Field notes</p>
+<h2>Beyond what we know.</h2>
+<div class="facts" id="facts"></div>
+</div></section>
+
+<section class="pad" id="expedition"><div class="wrap">
+<p class="mono">Simulation</p>
+<h2>Plan your own expedition.</h2>
+<p class="sub">A simulated, educational experience. Nothing is booked and nothing is paid for.</p>
+<div class="box" id="xbox"></div>
+</div></section>
+
+<section class="pad"><div class="wrap">
+<p class="mono">Knowledge challenge</p>
+<h2>How well do you know the ocean?</h2>
+<div class="box q" id="quiz"></div>
+</div></section>
+
+<section class="final"><div class="orb" style="width:340px;height:340px;left:8%;top:12%"></div><div class="orb" style="width:200px;height:200px;right:12%;bottom:14%;animation-delay:2s"></div>
+<div class="wrap" style="position:relative"><p class="mono">End of descent</p>
+<h2 class="serif">The ocean still holds secrets.</h2>
+<p class="sub">Every descent reveals another story. The journey into the unknown never truly ends.</p>
+<button class="btn" id="again">Explore again</button></div></section>
+</main>
+
+<footer><div class="wrap">
+<div><a class="logo" href="#hero">ABYSS</a><p class="sub" style="margin-top:10px">Exploring the unknown, one depth at a time.</p><small class="mono" style="margin-top:14px;color:var(--mute)">An educational project</small></div>
+<ul><li><a href="#descent">Explore</a></li><li><a href="#zones">Depth Zones</a></li><li><a href="#life">Marine Life</a></li><li><a href="#expedition">Expedition</a></li></ul>
+<div id="contact"><p class="mono">Contact</p><p style="margin-top:10px;color:var(--mute)">Powered by <b style="color:var(--cyan);font-weight:500">Muhammadbilol</b></p></div>
+<div><a class="btn ghost" href="#hero">Back to top ↑</a><small style="margin-top:16px">© <span id="yr"></span> ABYSS</small></div>
+</div></footer>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const ZONES=[
+{id:"sunlight",n:"Sunlight Zone",r:"0–200 m",min:0,max:200,h:"Where light becomes life.",d:"The ocean’s illuminated upper layer supports extraordinary ecosystems and much of the marine life we recognize.",c:"#3aa8d8",c2:"#0B3550",sp:"Sea Turtle"},
+{id:"twilight",n:"Twilight Zone",r:"≈200–1,000 m",min:200,max:1000,h:"Where the light begins to fade.",d:"Sunlight becomes increasingly faint, creating a world of shadows, adaptation, and extraordinary marine life.",c:"#0B3550",c2:"#061827",sp:"Vampire Squid"},
+{id:"midnight",n:"Midnight Zone",r:"≈1,000–4,000 m",min:1000,max:4000,h:"The world without sunlight.",d:"Beyond the reach of sunlight, marine organisms survive in one of Earth’s most mysterious environments.",c:"#061827",c2:"#020B12",sp:"Anglerfish"},
+{id:"abyssal",n:"Abyssal Zone",r:"≈4,000–6,000 m",min:4000,max:6000,h:"An ocean of silence.",d:"Vast seafloor plains and extreme conditions define this remote environment.",c:"#04121c",c2:"#020B12",sp:"Dumbo Octopus"},
+{id:"hadal",n:"Hadal Zone",r:"≈6,000–11,000 m",min:6000,max:11000,h:"The final frontier.",d:"Hidden within the deepest ocean trenches, the hadal zone represents some of the most extreme environments on our planet.",c:"#020B12",c2:"#000508",sp:"Dumbo Octopus"}];
+const zoneAt=m=>ZONES.find(z=>m<z.max)||ZONES[4];
+/* creature art (simple silhouettes) */
+const SH={
+"Blue Whale":'<path d="M20 70c30-30 100-34 140-8l24-20-4 36 4 34-26-18c-42 18-110 8-138-24z"/><circle cx="52" cy="62" r="2.5" fill="#020B12"/>',
+"Giant Squid":'<path d="M30 60c20-30 70-34 96-6 14 8 36 8 52 2-16 8-34 14-52 12-26 26-76 22-96-8z"/><path d="M126 66l50 22M126 70l46 6M126 74l40 20M126 62l46-12" stroke="currentColor" stroke-width="3" fill="none"/><circle cx="70" cy="58" r="7" fill="#020B12"/>',
+"Anglerfish":'<path d="M50 70c0-30 50-40 80-20 16 10 24 24 30 36-12-4-18 0-26 6-30 14-84 4-84-22z"/><path d="M80 52c0-26 10-30 26-28" stroke="currentColor" stroke-width="2.5" fill="none"/><circle cx="108" cy="24" r="7" fill="#fff" class="glow"/><path d="M52 74l30 6-6-12 10 8-6-14" stroke="#020B12" stroke-width="2" fill="none"/>',
+"Manta Ray":'<path d="M100 36c30 6 70 24 92 44-34-6-60 2-92 20-32-18-58-26-92-20C30 60 70 42 100 36z"/><path d="M100 98c0 14 4 20 8 24" stroke="currentColor" stroke-width="3" fill="none"/>',
+"Sea Turtle":'<ellipse cx="100" cy="62" rx="48" ry="32"/><path d="M60 50L24 28l24 36zM140 50l36-22-24 36zM66 84L40 108l34-14zM134 84l26 24-34-14z"/><circle cx="154" cy="58" r="12"/>',
+"Dumbo Octopus":'<path d="M60 70c0-34 22-48 40-48s40 14 40 48c-14 8-26 8-40 8s-26 0-40-8z"/><path d="M60 50c-20-10-30 4-26 18 8-2 20-6 28-6zM140 50c20-10 30 4 26 18-8-2-20-6-28-6z"/><path d="M72 78c-2 14-8 20-12 24M92 80c0 14-2 20-4 26M108 80c0 14 2 20 4 26M128 78c2 14 8 20 12 24" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>',
+"Vampire Squid":'<path d="M60 74c0-36 22-50 40-50s40 14 40 50c-16-6-26 8-40 8s-24-14-40-8z"/><circle cx="84" cy="58" r="6" fill="#4a7fff" opacity=".9"/><circle cx="116" cy="58" r="6" fill="#4a7fff" opacity=".9"/><path d="M60 74L48 100M140 74l12 26M80 82l-6 24M120 82l6 24" stroke="currentColor" stroke-width="3" fill="none"/>',
+"Deep-sea Dragonfish":'<path d="M20 64c30-20 90-22 130-8l30-6-14 18 14 18-30-6c-40 14-100 12-130-16z"/><path d="M26 66l-6 14M36 70l-4 16" stroke="#020B12" stroke-width="2"/><circle cx="34" cy="62" r="3" fill="#6FE7E1" class="glow"/><path d="M60 78h70" stroke="#6FE7E1" stroke-width="2" stroke-dasharray="2 6"/>'};
+function art(name,depth,dim){
+ const z=zoneAt(depth),dark=depth>1000,col=depth<200?"#EAF7F7":depth<1000?"#a9d0e0":"#6FE7E1";
+ const dots=Array.from({length:14},(_,i)=>`<circle cx="${(i*57)%200}" cy="${(i*37)%120}" r="${.6+(i%3)*.5}" fill="#cdefff" opacity=".4"/>`).join("");
+ const bed=depth>=4000?`<path d="M0 104c40-8 70 4 110-2s60 4 90-2v20H0z" fill="#0a1a24"/>`:"";
+ const trench=depth>=6000?`<path d="M0 90l50 14 30-40 20 56 24-50 36 36 40-12v26H0z" fill="#03080d"/>`:"";
+ return `<svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g${z.id}${name.length}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${z.c}"/><stop offset="1" stop-color="${z.c2}"/></linearGradient><filter id="b"><feGaussianBlur stdDeviation="2.5"/></filter></defs><rect width="200" height="120" fill="url(#g${z.id}${name.length})"/>${depth<200?'<path d="M60 0l-30 120h20zM110 0l20 120h20zM160 0l-10 120h12z" fill="#fff" opacity=".12"/>':""}${dots}${bed}${trench}<g style="color:${col}" fill="currentColor" ${dark?'opacity=".92"':""}>${SH[name]}</g></svg>`;
+}
+const SP=[
+{n:"Blue Whale",s:"Balaenoptera musculus",cat:["surface"],dep:"Mostly the upper ocean; dives are usually modest",zone:"Sunlight Zone",d:"The blue whale is the largest animal known to have ever lived. It feeds mainly on krill, filtering huge mouthfuls of water through baleen plates.",m:0},
+{n:"Giant Squid",s:"Architeuthis dux",cat:["deep"],dep:"Deep water, often reported below about 300–1,000 m",zone:"Twilight to Midnight Zone",d:"Rarely seen alive, the giant squid has some of the largest eyes in the animal kingdom, thought to help it detect faint light in dark water.",m:700},
+{n:"Anglerfish",s:"Order Lophiiformes",cat:["deep"],dep:"Many deep-sea species live below about 1,000 m",zone:"Midnight Zone",d:"Many deep-sea anglerfish dangle a glowing lure above their mouths. The light is generally produced with help from symbiotic bioluminescent bacteria.",m:2000},
+{n:"Manta Ray",s:"Mobula birostris",cat:["surface"],dep:"Mostly near the surface, usually in the upper ocean",zone:"Sunlight Zone",d:"The giant oceanic manta is a filter feeder that glides through open water with broad, wing-like pectoral fins, feeding on plankton.",m:50},
+{n:"Sea Turtle",s:"Chelonia mydas (green sea turtle)",cat:["surface"],dep:"Coastal and shallow waters, generally the upper ocean",zone:"Sunlight Zone",d:"Green sea turtles travel long distances between feeding and nesting areas. Adults graze largely on seagrasses and algae.",m:20},
+{n:"Dumbo Octopus",s:"Genus Grimpoteuthis",cat:["abyssal","hadal"],dep:"Typically deep; filmed at nearly 7,000 m in the Java Trench",zone:"Abyssal to Hadal Zone",d:"Named for the ear-like fins it flaps to swim, the dumbo octopus lives on or near the deep seafloor and is among the deepest-living octopuses known.",m:5000},
+{n:"Vampire Squid",s:"Vampyroteuthis infernalis",cat:["deep"],dep:"Roughly 600–1,200 m in low-oxygen water",zone:"Twilight to Midnight Zone",d:"Despite its name, it is not a true squid or octopus. It lives in oxygen-poor depths and can release glowing mucus instead of ink.",m:900},
+{n:"Deep-sea Dragonfish",s:"Family Stomiidae",cat:["deep"],dep:"Commonly from several hundred to over 1,000 m",zone:"Twilight to Midnight Zone",d:"Dragonfish have light-producing organs and long, fang-like teeth. Some species make light that most deep-sea animals cannot easily see.",m:800}];
+/* build zones */
+(function(){
+ const host=$("#zones"),lay=["","flip","center","flip",""];
+ host.innerHTML=ZONES.map((z,i)=>`<section class="zone ${lay[i]}" data-z="${i}" aria-labelledby="zh${i}"><div class="wrap"><div class="grid"><div><div class="num" aria-hidden="true">0${i+1}</div><span class="mono chip">${z.r}</span><h2 class="serif" id="zh${i}">${z.h}</h2><p class="sub">${z.d}</p></div><div class="art">${art(z.sp,z.min+1,0)}</div></div></div></section>`).join("");
+})();
+/* gauge */
+const gauge=$("#gauge"),ro=$("#readout"),stops=[[0,"Surface"],[200,"200 m"],[1000,"1,000 m"],[4000,"4,000 m"],[6000,"6,000 m"],[11000,"11,000 m"]];
+$("ol",gauge).innerHTML=stops.map(s=>`<li data-d="${s[0]}" style="top:${s[0]/110}%">${s[1]}</li>`).join("");
+const cmap=[[0,[26,127,176]],[200,[11,53,80]],[1000,[6,24,39]],[4000,[3,16,26]],[11000,[2,11,18]]];
+function colorAt(d){for(let i=1;i<cmap.length;i++){if(d<=cmap[i][0]){const a=cmap[i-1],b=cmap[i],t=(d-a[0])/(b[0]-a[0]);return a[1].map((v,k)=>Math.round(v+(b[1][k]-v)*t))}}return cmap.at(-1)[1]}
+function update(){
+ const y=scrollY,vh=innerHeight,first=$("#zones"),secs=$$(".zone");
+ let depth=0;const mid=y+vh*.55,zs=secs[0].offsetTop,top0=first.offsetTop;
+ if(mid>top0){depth=11000;for(const [i,s] of secs.entries()){const t=s.offsetTop,b=t+s.offsetHeight;if(mid>=t&&mid<b){const z=ZONES[i];depth=z.min+(mid-t)/(b-t)*(z.max-z.min);break}if(mid<t){depth=ZONES[i].min;break}}
+  const last=secs.at(-1);if(mid>=last.offsetTop+last.offsetHeight)depth=11000;}
+ const dpt=Math.round(depth);
+ document.documentElement.style.setProperty("--bg",`rgb(${colorAt(depth)})`);
+ const show=y>vh*.6;gauge.classList.toggle("show",show);ro.classList.toggle("show",show);
+ $(".fill",gauge).style.height=dpt/110+"%";$(".dot",gauge).style.top=dpt/110+"%";
+ $$("li",gauge).forEach(li=>li.classList.toggle("on",dpt>=+li.dataset.d&&(!li.nextElementSibling||dpt<+li.nextElementSibling.dataset.d)));
+ ro.textContent=`${zoneAt(dpt).n} · ${dpt.toLocaleString("en-US")} m`;
+ $("header").classList.toggle("solid",y>40);
+ /* active nav */
+ let cur="";for(const id of ["descent","zones","life","expedition"]){const e=document.getElementById(id);if(e&&e.getBoundingClientRect().top<vh*.4)cur=id}
+ $$("nav a").forEach(a=>a.classList.toggle("on",a.dataset.s===cur));
+}
+let tick=false;addEventListener("scroll",()=>{if(!tick){tick=true;requestAnimationFrame(()=>{update();tick=false})}},{passive:true});addEventListener("resize",update);
+/* dust */
+if(!RM)$(".dust").innerHTML=Array.from({length:34},()=>`<i style="left:${Math.random()*100}%;top:${60+Math.random()*50}%;animation-duration:${14+Math.random()*22}s;animation-delay:-${Math.random()*30}s;transform:scale(${.6+Math.random()*1.6})"></i>`).join("");
+/* nav */
+const nav=$("#nav"),mb=$("#menu");
+function setMenu(o){nav.classList.toggle("open",o);mb.setAttribute("aria-expanded",o);mb.setAttribute("aria-label",o?"Close menu":"Open menu");mb.textContent=o?"✕":"☰";document.body.style.overflow=o?"hidden":""}
+mb.onclick=()=>setMenu(!nav.classList.contains("open"));
+$$("nav a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
+addEventListener("keydown",e=>{if(e.key==="Escape"&&nav.classList.contains("open")){setMenu(false);mb.focus()}});
+/* depth explorer */
+const sl=$("#slider");
+function drawDepth(){
+ const d=+sl.value,z=zoneAt(d),sp=SP.filter(s=>s.m<=d).sort((a,b)=>Math.abs(a.m-d)-Math.abs(b.m-d))[0]||SP[4];
+ $("#dv").textContent=d.toLocaleString("en-US");$("#dz").textContent=z.n+" · "+z.r;$("#dd").textContent=z.d;
+ sl.setAttribute("aria-valuetext",`${d.toLocaleString("en-US")} metres, ${z.n}`);
+ const c=colorAt(d);$("#stage").style.background=`rgb(${c})`;$("#stage").innerHTML=art(sp.n,d,0);
+}
+sl.addEventListener("input",drawDepth);drawDepth();
+/* species */
+const F=[["all","All species"],["surface","Surface"],["deep","Deep sea"],["abyssal","Abyssal"],["hadal","Hadal"]];
+let filt="all";
+const fb=$(".filters");fb.innerHTML=F.map(f=>`<button type="button" data-f="${f[0]}" aria-pressed="${f[0]==="all"}">${f[1]}</button>`).join("");
+function cards(){
+ const list=SP.filter(s=>filt==="all"||s.cat.includes(filt));
+ $(".cards").innerHTML=list.map(s=>`<button class="card" data-n="${s.n}"><div class="art">${art(s.n,s.m,0)}</div><div class="t"><h3>${s.n}</h3><em>${s.s}</em><p class="mono" style="margin-top:8px">${s.zone}</p></div></button>`).join("");
+}
+fb.onclick=e=>{const b=e.target.closest("button");if(!b)return;filt=b.dataset.f;$$("button",fb).forEach(x=>x.setAttribute("aria-pressed",x===b));cards()};
+cards();
+const dlg=$("#dlg");let opener=null;
+$(".cards").onclick=e=>{const c=e.target.closest(".card");if(!c)return;opener=c;const s=SP.find(x=>x.n===c.dataset.n);
+ $("#dbody").innerHTML=`<div class="art" style="border-radius:0;border:0;aspect-ratio:16/9">${art(s.n,s.m,0)}</div><div class="body"><p class="mono">${s.zone}</p><h3 id="dt">${s.n}</h3><em style="color:var(--mute)">${s.s}</em><div class="meta"><span class="mono">Habitat · <span style="color:var(--ice);text-transform:none;letter-spacing:0">${s.dep}</span></span></div><p>${s.d}</p><p class="note">Illustration is a simplified silhouette, not a photograph. Depth ranges are approximate.</p></div>`;
+ dlg.showModal();$(".x",dlg).focus()};
+$(".x",dlg).onclick=()=>dlg.close();
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+dlg.addEventListener("close",()=>opener&&opener.focus());
+/* facts */
+const FA=[
+["Ocean depth","The deepest known point is the Challenger Deep in the Mariana Trench, at roughly 10,900 metres. Measurements vary slightly between surveys.","M8 6v34M8 40l38-0M14 14h6M14 22h10M14 30h14"],
+["Ocean ecosystems","From sunlit coral reefs to seafloor plains and trenches, each depth layer has its own conditions and its own community of life.","M4 36c6-8 12 8 18 0s12 8 18 0M12 20c4-8 10-8 12 0"],
+["Marine biodiversity","Scientists keep discovering new marine species, and a large share of ocean life is still thought to be undescribed.","M10 30a14 8 0 1 0 28 0a14 8 0 1 0-28 0M38 30l8-8v16z"],
+["Bioluminescence","Many deep-sea animals make their own light, using it to lure prey, startle predators, or communicate in the dark.","M27 8a12 12 0 1 0 0 24a12 12 0 1 0 0-24M27 38v8M16 36l-4 6M38 36l4 6"],
+["Deep-sea exploration","Far more of the surface of the Moon has been mapped in detail than the global seafloor. Crewed dives to the deepest trenches remain very rare.","M10 20h28v14H10zM38 24h8v6h-8zM18 20v-8h8v8"]];
+$("#facts").innerHTML=FA.map(f=>`<article class="fact"><svg class="ic" viewBox="0 0 52 52" fill="none" stroke="#6FE7E1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${f[2]}"/></svg><h3>${f[0]}</h3><p>${f[1]}</p></article>`).join("");
+/* expedition */
+const XO={dest:["Sunlight Zone","Twilight Zone","Midnight Zone","Abyssal Zone","Hadal Zone"],dur:["1 hour","6 hours","12 hours","24 hours"],foc:["Marine Life","Geological Formations","Deep-Sea Ecosystems","Ocean Science"]};
+const FD={"Marine Life":"Watch for the animals that define this layer and note how their bodies suit the light and pressure.","Geological Formations":"Study the landscape: slopes, sediment, vents or trench walls, and how they shape the habitat.","Deep-Sea Ecosystems":"Follow the food web, from drifting particles to the predators that depend on them.","Ocean Science":"Log temperature, pressure and light as you descend, the way research teams profile the water column."};
+function xForm(){
+ const grp=(k,l,arr)=>`<fieldset><legend class="mono">${l}</legend><div class="opts">${arr.map(o=>`<label><input type="radio" name="${k}" value="${o}"><span>${o}</span></label>`).join("")}</div></fieldset>`;
+ $("#xbox").innerHTML=`<form id="xf" novalidate>${grp("dest","1 · Destination",XO.dest)}${grp("dur","2 · Duration",XO.dur)}${grp("foc","3 · Exploration focus",XO.foc)}<button class="btn" type="submit">Generate my expedition</button><p class="err" role="alert" id="xe"></p></form>`;
+ $("#xf").onsubmit=e=>{e.preventDefault();const v=Object.fromEntries(["dest","dur","foc"].map(k=>[k,(document.querySelector(`input[name=${k}]:checked`)||{}).value]));
+  if(!v.dest||!v.dur||!v.foc){$("#xe").textContent="Please choose a destination, a duration and a focus.";return}
+  const z=ZONES.find(z=>z.n===v.dest);
+  $("#xbox").innerHTML=`<div class="result"><div class="art" style="aspect-ratio:4/3">${art(z.sp,z.min+1,0)}</div><div><p class="mono">Simulated expedition summary</p><h3 class="serif" style="font-size:2rem;margin:8px 0">${v.dest}</h3><dl><dt>Destination</dt><dd>${v.dest} (${z.r})</dd><dt>Duration</dt><dd>${v.dur}</dd><dt>Focus</dt><dd>${v.foc}</dd></dl><p>${z.d} ${FD[v.foc]}</p><p class="note">This is a simulation for learning. No expedition has been booked.</p><div class="cta"><button class="btn" id="ed">Edit choices</button><button class="btn ghost" id="rs">Start over</button></div></div></div>`;
+  $("#ed").onclick=()=>{xForm();Object.entries(v).forEach(([k,val])=>{const i=$(`input[name=${k}][value="${val}"]`);if(i)i.checked=true})};$("#rs").onclick=xForm;
+ };
+}
+xForm();
+/* quiz */
+const QZ=[
+{q:"What is the deepest known point in the ocean?",o:["Puerto Rico Trench","Challenger Deep, Mariana Trench","Java Trench","Mid-Atlantic Ridge"],a:1,e:"The Challenger Deep lies at roughly 10,900 m."},
+{q:"Roughly how deep does the sunlight zone extend?",o:["About 2,000 m","About 1,000 m","About 200 m","About 20 m"],a:2,e:"The sunlit layer reaches down to approximately 200 m."},
+{q:"What is bioluminescence?",o:["Light made by living organisms","Reflected moonlight","Heat from hydrothermal vents","Glowing sand"],a:0,e:"Many deep-sea animals produce their own light."},
+{q:"Which animal is the largest known to have ever lived?",o:["Giant squid","Whale shark","Blue whale","Manta ray"],a:2,e:"The blue whale holds that record."},
+{q:"Which zone lies roughly between 1,000 and 4,000 m?",o:["Midnight Zone","Twilight Zone","Abyssal Zone","Hadal Zone"],a:0,e:"The midnight zone is beyond the reach of sunlight."}];
+let qi=0,sc=0;
+function quiz(){
+ const box=$("#quiz");
+ if(qi>=QZ.length){const msg=sc>=4?"A true deep-sea expert.":sc>=2?"A confident explorer.":"Every dive teaches something. Try again.";
+  box.innerHTML=`<p class="mono">Result</p><h3 class="serif" style="font-size:2.6rem;margin:10px 0">${sc} / ${QZ.length}</h3><p>${msg}</p><button class="btn" id="qr" style="margin-top:22px">Restart</button>`;$("#qr").onclick=()=>{qi=0;sc=0;quiz()};return}
+ const q=QZ[qi];
+ box.innerHTML=`<div class="prog"><i style="width:${qi/QZ.length*100}%"></i></div><fieldset><legend class="mono">Question ${qi+1} of ${QZ.length}</legend><h3>${q.q}</h3><div class="opts">${q.o.map((o,i)=>`<label><input type="radio" name="qa" value="${i}"><span>${o}</span></label>`).join("")}</div></fieldset><p class="fb" role="status" aria-live="polite"></p><button class="btn" id="qs">Submit answer</button>`;
+ $("#qs").onclick=function(){
+  if(this.dataset.done){qi++;quiz();return}
+  const c=document.querySelector("input[name=qa]:checked");if(!c){$(".fb").textContent="Select an answer first.";return}
+  const v=+c.value,ok=v===q.a;if(ok)sc++;
+  $$("input[name=qa]").forEach(i=>{i.disabled=true;const s=i.nextElementSibling;if(+i.value===q.a)s.classList.add("good");else if(i===c)s.classList.add("bad")});
+  $(".fb").innerHTML=`<b style="color:${ok?"#6FE7A8":"var(--coral)"}">${ok?"Correct.":"Not quite."}</b> ${q.e}`;
+  this.dataset.done=1;this.textContent=qi===QZ.length-1?"See result":"Next question";
+ };
+}
+quiz();
+/* misc */
+$("#again").onclick=()=>scrollTo({top:0,behavior:RM?"auto":"smooth"});
+$("#yr").textContent=new Date().getFullYear();
+update();
+</script>
+</body>
+</html>
